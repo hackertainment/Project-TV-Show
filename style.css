@@ -1,3 +1,27 @@
 #root {
   color: red;
+
+  display: flex;
+  justify-content: space-between;
+}
+
+.credit {
+  color: black;
+}
+
+.creative-commons {
+  font-family: Arial;
+  font-weight: bolder;
+  font-size: 0.5em;
+
+  border: 1px solid black;
+  box-sizing: border-box;
+  border-radius: 1em;
+  width: 2em;
+  height: 2em;
+
+  display: inline-block;
+  line-height: 2em;
+  text-align: center;
+  vertical-align: top;
 }
