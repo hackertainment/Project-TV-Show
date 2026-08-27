@@ -11,12 +11,12 @@ function makePageForEpisodes(episodeList) {
 
   for (const i of episodeList) {
     const card = document.getElementById("template-episode").content.cloneNode(true);
-    card.querySelector("section").id = i.id;
+    card.querySelector("article").id = i.id;
     card.querySelector("h3").textContent = `${i.name} - S${i.season.toString().padStart(2, "0")}E${i.number.toString().padStart(2, "0")}`;
     card.querySelector("img").src = i.image.medium;
     //card.querySelector("img").alt = "Game of Thrones 1x01";
     card.querySelector("p").outerHTML = i.summary;
-    document.body.append(card);
+    document.querySelector("main").append(card);
   }
 }
 
