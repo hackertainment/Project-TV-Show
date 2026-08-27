@@ -3,15 +3,32 @@
 }
 
 body {
-  font-family: "Source Sans Pro", "Helvetica Neue", Arial, sans-serif;
+  font-family: "Helvetica Neue", Arial, sans-serif;
   margin: 0;
+  position: relative;
+}
+
+main {
+  position: absolute;
+  top: 0;
+  left: 0;
 }
 
 header {
+  position: sticky;
+  top: 0;
+  width: auto;
+  background-color: silver;
+
   display: flex;
   justify-content: space-between;
   padding: 5px 10px;
-  background-color: silver;
+  font-family: "Helvetica Narrow", "Arial Narrow", sans-serif;
+}
+
+select {
+  font-family: "Helvetica Narrow", "Arial Narrow", sans-serif;
+  font-size: small;
 }
 
 .credit {
@@ -40,8 +57,8 @@ section {
   flex-wrap: wrap;
   gap: 2rem;
   justify-content: space-between;
-  padding: 5px 10px;
-  margin: 5px 10px;
+  padding: 5px 10px;  /* also hardcoded in cardOffset of dropdownChangeHandler() in script.js */
+  margin: 5px 10px;  /* also hardcoded in cardOffset of dropdownChangeHandler() in script.js */
 }
 
 article {
@@ -52,10 +69,9 @@ article {
 }
 
 article h3 {
-  border: 1px solid black;
+  border: 2px solid darkgray;
   border-radius: 10px;
-  padding-top: 5px;
-  padding-bottom: 5px;
+  padding: 5px 10px;
   margin-top: 0;
 }
 
@@ -64,4 +80,8 @@ article p {
   color: dimgray;
   padding-left: 15px;
   padding-right: 15px;
+}
+
+article.highlight {
+  outline: 2px solid black;
 }

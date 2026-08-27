@@ -10,13 +10,28 @@ function makePageForEpisodes(episodeList) {
 
   const searchTerm = document.getElementById("search").value.toLowerCase();
   const episodes = episodeList.filter((episode) => episode.name.toLowerCase().includes(searchTerm) || episode.summary.toLowerCase().includes(searchTerm));
+  const options = episodes.map(makeOptionForEpisode);
   const cards = episodes.map(makeCardForEpisode);
+  const selectElem = document.querySelector("select");
   const sectionElem = document.querySelector("section"); 
+  while (selectElem.firstChild) { 
+    selectElem.firstChild.remove(); 
+  }
   while (sectionElem.firstChild) { 
     sectionElem.firstChild.remove(); 
   }
-  document.querySelector("section").append(...cards);
+  selectElem.append(...options);
+  sectionElem.append(...cards);
   document.getElementById("found").innerHTML = `Displaying ${episodes.length}/${episodeList.length} episodes`;
+}
+
+function makeOptionForEpisode(episode) {
+  const option = document.createElement('option');
+
+  option.value = episode.id;
+  option.textContent = `S${episode.season.toString().padStart(2, "0")}E${episode.number.toString().padStart(2, "0")} - ${episode.name}`;
+
+  return option;
 }
 
 function makeCardForEpisode(episode) {
@@ -31,13 +46,20 @@ function makeCardForEpisode(episode) {
     return card;
 }
 
-/*function searchInputHandler(event) {
-  const searchTerm = event.target.value.toLowerCase();
-  console.log(searchTerm);
-  setup();
-}*/
+function dropdownChangeHandler(event) {
+  const episodeId = event.target.value;
+  const cardElem = document.getElementById(episodeId);
+  const cardOffset = window.pageYOffset+cardElem.getBoundingClientRect().top-document.querySelector('header').offsetHeight-5-5;  //- section padding top px - section margin top px
+
+  for (const child of document.querySelector("section").children) {
+    child.classList.remove("highlight");
+  }
+  cardElem.classList.add("highlight");
+  window.scrollTo({top: cardOffset, behavior: "smooth"});
+}
 
 window.addEventListener("load", () => {
+  document.getElementById("dropdown").addEventListener("change", dropdownChangeHandler);
   document.getElementById("search").addEventListener("input", setup);
 });
 
