@@ -1,15 +1,17 @@
 #root {
   color: red;
-
-  display: flex;
-  justify-content: space-between;
-  padding: 5px 10px;
-  background-color: silver;
 }
 
 body {
   font-family: "Source Sans Pro", "Helvetica Neue", Arial, sans-serif;
   margin: 0;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  padding: 5px 10px;
+  background-color: silver;
 }
 
 .credit {
@@ -33,7 +35,7 @@ body {
   vertical-align: top;
 }
 
-main {
+section {
   display: flex;
   flex-wrap: wrap;
   gap: 2rem;
