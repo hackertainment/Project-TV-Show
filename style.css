@@ -14,6 +14,10 @@ main {
   left: 0;
 }
 
+main.invisible {
+  visibility: hidden;
+}
+
 header {
   position: sticky;
   top: 0;
@@ -29,10 +33,6 @@ header {
 select {
   font-family: "Helvetica Narrow", "Arial Narrow", sans-serif;
   font-size: small;
-}
-
-.credit {
-  color: black;
 }
 
 .creative-commons {

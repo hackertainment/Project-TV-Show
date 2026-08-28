@@ -1,10 +1,36 @@
 //You can edit ALL of the code here
+//function setup() {
+//  const allEpisodes = getAllEpisodes();
+//  makePageForEpisodes(allEpisodes);
+//}
+
+const episodeList = [];
+
+async function request() {
+  //const url = "https://simulatehttpcode.vercel.app/statuscode?q=404";
+  const url = "https://api.tvmaze.com/shows/82/episodes";
+  const response = await fetch(url);
+  const json = response.json();
+  //const json = await response.json();
+
+  return json;
+};
+
 function setup() {
-  const allEpisodes = getAllEpisodes();
-  makePageForEpisodes(allEpisodes);
+  document.getElementById("root").textContent = `LOADING...`;
+  const promise = request()
+    .then((json) => {
+      episodeList.push(...json);
+      makePageForEpisodes();
+      document.querySelector("main").classList.remove("invisible");
+    })
+    .catch((error) => {
+      console.error(error.message);
+      document.getElementById("root").textContent = `ERROR: ${error.message}!`;
+    });
 }
 
-function makePageForEpisodes(episodeList) {
+function makePageForEpisodes() {
   const rootElem = document.getElementById("root");
   rootElem.textContent = `Got ${episodeList.length} episode(s)`;
 
@@ -60,7 +86,7 @@ function dropdownChangeHandler(event) {
 
 window.addEventListener("load", () => {
   document.getElementById("dropdown").addEventListener("change", dropdownChangeHandler);
-  document.getElementById("search").addEventListener("input", setup);
+  document.getElementById("search").addEventListener("input", makePageForEpisodes);
 });
 
 window.onload = setup;
