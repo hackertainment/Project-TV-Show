@@ -14,14 +14,15 @@
 
     <main class="invisible">
       <header>
-        <span class="filter">
-          <select id="dropdown" name="dropdown"></select>
-          <input type="text" id="search" name="search" placeholder="your search term..." />
-          <span id="found"></span>
+        <span>
+          <select id="select-show" name="select-show"><option value="0">your chosen show...</option></select>
+          <select id="select-episode" name="select-episode"><option value="0">your chosen episode...</option></select>
+          <input type="text" id="input-search" name="input-search" placeholder="your search term..." />
+          <span id="status-message"></span>
         </span>
-        <span class="credit">
+        <span>
           <span class="creative-commons">CC</span>
-          Data source at <a href="https://tvmaze.com/">TVmaze API</a>
+          Datasource at <a href="https://tvmaze.com/">TVmaze API</a>
           under <a href="http://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a> license.
         </span>
       </header>

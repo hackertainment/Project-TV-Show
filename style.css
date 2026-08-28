@@ -12,6 +12,7 @@ main {
   position: absolute;
   top: 0;
   left: 0;
+  width: 100%;
 }
 
 main.invisible {
@@ -21,13 +22,13 @@ main.invisible {
 header {
   position: sticky;
   top: 0;
-  width: auto;
   background-color: silver;
 
   display: flex;
   justify-content: space-between;
   padding: 5px 10px;
   font-family: "Helvetica Narrow", "Arial Narrow", sans-serif;
+  font-size: small;
 }
 
 select {
