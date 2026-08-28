@@ -8,15 +8,16 @@ body {
   position: relative;
 }
 
-main {
+#container-tvshow,
+#container-episode {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
 }
 
-main.invisible {
-  visibility: hidden;
+.invisible {
+  display: none;
 }
 
 header {
@@ -34,6 +35,33 @@ header {
 select {
   font-family: "Helvetica Narrow", "Arial Narrow", sans-serif;
   font-size: small;
+}
+
+.tooltip-listing {
+  visibility: hidden;
+  width: auto;
+  top: 100%;
+  margin-left: -10px;
+  margin-top: -5px;
+  border-radius: 5px;
+  background-color: dimgray;
+  color: lightgray;
+  text-align: center;
+  font-size: small;
+  padding: 5px 5px;
+  position: absolute;
+  z-index: 1;
+}
+
+#button-listing:hover .tooltip-listing {
+  visibility: visible;
+}
+
+.icon-listing {
+  width: 10px;
+  height: 1.5px;
+  background-color: black;
+  margin: 1px 0;
 }
 
 .creative-commons {
@@ -62,27 +90,66 @@ section {
   margin: 5px 10px;  /* also hardcoded in cardOffset of dropdownChangeHandler() in script.js */
 }
 
-article {
+.card-tvshow {
+  width: 100%;
+  box-shadow: 0px 5px 15px gray;
+  border-radius: 10px;
+  padding: 5px 10px;
+}
+
+.card-tvshow span {
+  display: inline-block;
+  vertical-align: top;
+  width: 50%;
+  color: dimgray;
+  font-size: small;
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
+.card-tvshow span p {
+  margin-top: 0;
+}
+
+.card-tvshow ul {
+  display: inline-block;
+  vertical-align: top;
+  width: 20%;
+  list-style-type: none;
+  border: 2px solid darkgray;
+  border-radius: 5px;
+  padding: 5px 10px;
+  margin: 0;
+}
+
+.card-tvshow ul li {
+  font-size: small;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+}
+
+.card-episode {
   width: 30%;
   text-align: center;
   box-shadow: 0px 5px 15px gray;
   border-radius: 10px;
 }
 
-article h3 {
+.card-episode h3 {
   border: 2px solid darkgray;
   border-radius: 10px;
   padding: 5px 10px;
   margin-top: 0;
 }
 
-article p {
+.card-episode p {
   text-align: left;
   color: dimgray;
+  font-size: small;
   padding-left: 15px;
   padding-right: 15px;
 }
 
-article.highlight {
+.card-episode.highlight {
   outline: 2px solid black;
 }

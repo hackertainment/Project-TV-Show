@@ -12,13 +12,12 @@
     <div id="root">
     </div>
 
-    <main class="invisible">
+    <div id="container-tvshow" class="invisible">
       <header>
         <span>
-          <select id="select-show" name="select-show"><option value="0">your chosen show...</option></select>
-          <select id="select-episode" name="select-episode"><option value="0">your chosen episode...</option></select>
-          <input type="text" id="input-search" name="input-search" placeholder="your search term..." />
-          <span id="status-message"></span>
+          <label>Filtering for <input type="text" id="input-filter" name="input-filter" /></label>
+          <span id="message-tvshow">TVSHOW_MESSAGE</span>
+          <select id="select-tvshow" name="select-tvshow"><option value="0">your chosen show...</option></select>
         </span>
         <span>
           <span class="creative-commons">CC</span>
@@ -26,18 +25,46 @@
           under <a href="http://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a> license.
         </span>
       </header>
-      <section>
+      <section id="section-tvshow">
       </section>
-    </main>
+    </div>
+
+    <div id="container-episode" class="invisible">
+      <header>
+        <span>
+          <!-- <select id="select-show" name="select-show"><option value="0">your chosen show...</option></select> -->
+          <button id="button-listing"><div class="icon-listing"></div><div class="icon-listing"></div><div class="icon-listing"></div><div class="icon-listing"></div><span class="tooltip-listing">TV shows listing</span></button>
+          <select id="select-episode" name="select-episode"><option value="0">your chosen episode...</option></select>
+          <input type="text" id="input-search" name="input-search" placeholder="your search term..." />
+          <span id="message-episode">EPISODE_MESSAGE</span>
+        </span>
+        <span>
+          <span class="creative-commons">CC</span>
+          Datasource at <a href="https://tvmaze.com/">TVmaze API</a>
+          under <a href="http://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a> license.
+        </span>
+      </header>
+      <section id="section-episode">
+      </section>
+    </div>
+
+    <template id="template-tvshow">
+      <article class="card-tvshow">
+        <h2>TVSHOW_TITLE</h2>
+        <img />
+        <span>TVSHOW_SUMMARY</span>
+        <ul></ul>
+      </article>
+    </template>
 
     <template id="template-episode">
-      <article>
+      <article class="card-episode">
         <h3>EPISODE_TITLE</h3>
         <img />
         <p>EPISODE_SUMMARY</p>
       </article>
     </template>
-
+    
     <!-- Loads a provided function called getAllEpisodes() which returns all episodes -->
     <!-- script src="episodes.js"></script -->
 

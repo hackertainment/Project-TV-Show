@@ -4,22 +4,22 @@
 //  makePageForEpisodes(allEpisodes);
 //}
 
-const showList = [];
+const tvshowList = [];
 const episodeLists = [];
 
-async function requestShow() {
-  //const showUrl = "https://simulatehttpcode.vercel.app/statuscode?q=404";
-  const showUrl = "https://api.tvmaze.com/shows";
-  const showResponse = await fetch(showUrl);
-  const showJson = showResponse.json();
-  //const showJson = await showResponse.json();
+async function requestTvshow() {
+  //const tvshowUrl = "https://simulatehttpcode.vercel.app/statuscode?q=404";
+  const tvshowUrl = "https://api.tvmaze.com/shows";
+  const tvshowResponse = await fetch(tvshowUrl);
+  const tvshowJson = tvshowResponse.json();
+  //const tvshowJson = await tvshowResponse.json();
 
-  return showJson;
+  return tvshowJson;
 }
 
-async function requestEpisode(showId) {
+async function requestEpisode(tvshowId) {
   //const episodeUrl = "https://simulatehttpcode.vercel.app/statuscode?q=404";
-  const episodeUrl = `https://api.tvmaze.com/shows/${showId}/episodes`;
+  const episodeUrl = `https://api.tvmaze.com/shows/${tvshowId}/episodes`;
   const episodeResponse = await fetch(episodeUrl);
   const episodeJson = await episodeResponse.json();
 
@@ -29,22 +29,37 @@ async function requestEpisode(showId) {
 function setup() {
   document.getElementById("root").textContent = `LOADING...`;
   // when website loaded, fetch TV shows (and cache shows and render show selector)
-  const promise = requestShow()
+  const promise = requestTvshow()
     .then((json) => {
-      const shows = json.sort((a, b) => a.name.localeCompare(b.name));
-      const optionElems = shows.map(makeOptionForShow);
-      const selectElem = document.getElementById("select-show");
-      for (let i=selectElem.options.length-1; i>=1; i--) {
-        selectElem.remove(i);
-      }
-      selectElem.append(...optionElems);
-      showList.push(...shows);
-      document.querySelector("main").classList.remove("invisible");
+      const tvshows = json.sort((a, b) => a.name.localeCompare(b.name));
+      tvshowList.push(...tvshows);
+      makePageForTvshows();
+      document.getElementById("container-tvshow").classList.remove("invisible");
     })
     .catch((error) => {
       console.error(error.message);
       document.getElementById("root").textContent = `ERROR: ${error.message}!`;
     });
+}
+
+function makePageForTvshows() {
+  const filterTerm = document.getElementById("input-filter").value.toLowerCase();
+  const tvshows = tvshowList.filter((tvshow) => tvshow.name.toLowerCase().includes(filterTerm) || tvshow.genres.map((str) => str.toLowerCase()).includes(filterTerm) || tvshow.summary.toLowerCase().includes(filterTerm));
+  const optionElems = tvshows.map(makeOptionForTvshow);
+  const articleElems = tvshows.map(makeArticleForTvshow);
+  const selectElem = document.getElementById("select-tvshow");
+  const sectionElem = document.getElementById("section-tvshow");
+
+  // when display cards, render tvshow selector and the cards
+  for (let i=selectElem.options.length-1; i>=1; i--) {
+    selectElem.remove(i);
+  }
+  while (sectionElem.firstChild) { 
+    sectionElem.firstChild.remove(); 
+  }
+  selectElem.append(...optionElems);
+  sectionElem.append(...articleElems);
+  document.getElementById("message-tvshow").innerHTML = `found ${tvshows.length} shows`;
 }
 
 function makePageForEpisodes(episodeList) {
@@ -56,7 +71,7 @@ function makePageForEpisodes(episodeList) {
   const optionElems = episodes.map(makeOptionForEpisode);
   const articleElems = episodes.map(makeArticleForEpisode);
   const selectElem = document.getElementById("select-episode");
-  const sectionElem = document.querySelector("section");
+  const sectionElem = document.getElementById("section-episode");
 
   // when display cards, render episode selector and the cards
   for (let i=selectElem.options.length-1; i>=1; i--) {
@@ -67,14 +82,14 @@ function makePageForEpisodes(episodeList) {
   }
   selectElem.append(...optionElems);
   sectionElem.append(...articleElems);
-  document.getElementById("status-message").innerHTML = `Displaying ${episodes.length}/${episodeList.length} episodes`;
+  document.getElementById("message-episode").innerHTML = `Displaying ${episodes.length}/${episodeList.length} episodes`;
 }
 
-function makeOptionForShow(show) {
+function makeOptionForTvshow(tvshow) {
   const optionElem = document.createElement('option');
 
-  optionElem.value = show.id;
-  optionElem.textContent = show.name;
+  optionElem.value = tvshow.id;
+  optionElem.textContent = tvshow.name;
 
   return optionElem;
 }
@@ -88,49 +103,79 @@ function makeOptionForEpisode(episode) {
   return optionElem;
 }
 
-function makeArticleForEpisode(episode) {
-    const card = document.getElementById("template-episode").content.cloneNode(true);
-    const selectElem = document.getElementById("select-show");
+function makeArticleForTvshow(tvshow) {
+  const card = document.getElementById("template-tvshow").content.cloneNode(true);
+  const ratingElem = document.createElement("li");
+  const genresElem = document.createElement("li");
+  const statusElem = document.createElement("li");
+  const runtimeElem = document.createElement("li");
 
-    card.querySelector("article").id = episode.id;
-    card.querySelector("h3").textContent = `${episode.name} - S${episode.season.toString().padStart(2, "0")}E${episode.number.toString().padStart(2, "0")}`;
-    card.querySelector("img").src = episode.image.medium;
-    card.querySelector("img").alt = selectElem.options[selectElem.selectedIndex].text;
-    card.querySelector("p").outerHTML = episode.summary;
+  card.querySelector("article").id = tvshow.id;
+  card.querySelector("h2").textContent = tvshow.name;
+  card.querySelector("img").src = tvshow.image.medium;
+  card.querySelector("img").alt = tvshow.name;
+  card.querySelector("span").innerHTML = tvshow.summary;
+  ratingElem.innerHTML = `<b>Rated:</b> ${tvshow.rating.average}`;
+  genresElem.innerHTML = `<b>Genres:</b> ${tvshow.genres.join(" | ")}`;
+  statusElem.innerHTML = `<b>Status:</b> ${tvshow.status}`;
+  runtimeElem.innerHTML = `<b>Runtime:</b> ${tvshow.runtime}`;
+  card.querySelector("ul").append(ratingElem);
+  card.querySelector("ul").append(genresElem);
+  card.querySelector("ul").append(statusElem);
+  card.querySelector("ul").append(runtimeElem);
 
-    return card;
+  return card;
 }
 
-function showChangeHandler(event) {
-  const showId = event.target.value;
+function makeArticleForEpisode(episode) {
+  const card = document.getElementById("template-episode").content.cloneNode(true);
+  const selectElem = document.getElementById("select-tvshow");
 
-  if (!episodeLists[showId]) {  // if new show is chosen, then fetch its episodes (and cache episodes and display cards)
-    const promise = requestEpisode(showId)
+  card.querySelector("article").id = episode.id;
+  card.querySelector("h3").textContent = `${episode.name} - S${episode.season.toString().padStart(2, "0")}E${episode.number.toString().padStart(2, "0")}`;
+  card.querySelector("img").src = episode.image.medium;
+  card.querySelector("img").alt = selectElem.options[selectElem.selectedIndex].text;
+  card.querySelector("p").outerHTML = episode.summary;
+
+  return card;
+}
+
+function tvshowChangeHandler(event) {
+  const tvshowId = event.target.value;
+
+  if (!episodeLists[tvshowId]) {  // if new TV show is chosen, then fetch its episodes (and cache episodes and display cards)
+    const promise = requestEpisode(tvshowId)
       .then((json) => {
-        episodeLists[showId] = (showId=="0" ? [json] : json);
-        makePageForEpisodes(showId=="0" ? [] : json);
+        episodeLists[tvshowId] = (tvshowId=="0" ? [json] : json);
+        makePageForEpisodes(tvshowId=="0" ? [] : json);
+        if (tvshowId!="0") {
+          document.getElementById("container-tvshow").classList.add("invisible");          
+          document.getElementById("container-episode").classList.remove("invisible");          
+        }
       })
       .catch((error) => {
         console.error(error.message);
         document.getElementById("root").textContent = `ERROR: ${error.message}!`;
-        document.querySelector("main").classList.add("invisible");
+        document.getElementById("container-tvshow").classList.add("invisible");
       });
   }
-  else if (showId=="0") {  // if no show is chosen, then clear screen
+  else if (tvshowId=="0") {  // if no TV show is chosen, then clear screen
     makePageForEpisodes([]);
   }
-  else {  // if old show is chosen, then display cards (from cache episodes)
-    makePageForEpisodes(episodeLists[showId]);
+  else {  // if old TV show is chosen, then display cards (from cache episodes)
+    makePageForEpisodes(episodeLists[tvshowId]);
+    document.getElementById("container-tvshow").classList.add("invisible");          
+    document.getElementById("container-episode").classList.remove("invisible");          
   }
 }
 
 function episodeChangeHandler(event) {
   const episodeId = event.target.value;
   const articleElem = (episodeId=="0" ? null : document.getElementById(episodeId));
-  const articleOffset = (episodeId=="0" ? 0 : window.pageYOffset+articleElem.getBoundingClientRect().top-document.querySelector('header').offsetHeight-5-5);  // - section padding top px - section margin top px
+  const articleOffset = (episodeId=="0" ? 0 : window.pageYOffset+articleElem.getBoundingClientRect().top-document.getElementById("container-episode").querySelector('header').offsetHeight)-5-5;  // - section padding top px - section margin top px
 
   // when episode is chosen, hightlight its card and jump to the card
-  for (const child of document.querySelector("section").children) {
+  for (const child of document.getElementById("section-episode").children) {
     child.classList.remove("highlight");
   }
   if (articleElem!=null) {
@@ -140,16 +185,23 @@ function episodeChangeHandler(event) {
 }
 
 function searchInputHandler(event) {
-  const showId = document.getElementById("select-show").value;
+  const tvshowId = document.getElementById("select-tvshow").value;
 
   // when typing in search box, live update display cards
-  makePageForEpisodes(showId=="0" ? [] : episodeLists[showId]);
+  makePageForEpisodes(tvshowId=="0" ? [] : episodeLists[tvshowId]);
+}
+
+function listingClickHandler(event) {
+  document.getElementById("container-tvshow").classList.remove("invisible");          
+  document.getElementById("container-episode").classList.add("invisible");          
 }
 
 window.addEventListener("load", () => {
-  document.getElementById("select-show").addEventListener("change", showChangeHandler);
+  document.getElementById("input-filter").addEventListener("input", makePageForTvshows);
+  document.getElementById("select-tvshow").addEventListener("change", tvshowChangeHandler);
   document.getElementById("select-episode").addEventListener("change", episodeChangeHandler);
   document.getElementById("input-search").addEventListener("input", searchInputHandler);
+  document.getElementById("button-listing").addEventListener("click", listingClickHandler);
 });
 
 window.onload = setup;
